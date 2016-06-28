@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Welcome to the Login Page</title>
+	</head>
+	<body>
+		<h1>Signup</h1>
+		<form method = "post">
+			<table>
+				<tr>
+					<td>
+						<label>
+							Username
+						</label>
+					</td>
+					<td>
+						<input type="text" name = "username">
+					</td>
+					<td>
+						<label>
+							{{username_error}}
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>
+							Password
+						</label>
+					</td>
+					<td>
+						<input type="password" name = "password">
+					</td>
+					<td>
+						<label>
+							{{password_error}}
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>
+							Verify Password
+						</label>
+					</td>
+					<td>
+						<input type="password" name = "verify_password">
+					</td>
+					<td>
+						<label>
+							{{verify_password_error}}
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>
+							Email(optional)
+						</label>
+					</td>
+					<td>
+						<input type="text" name = "username">
+					</td>
+					<td>
+						<label>
+							{{email_error}}
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type = "submit">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

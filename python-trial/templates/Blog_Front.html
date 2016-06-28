@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<title>Welcome to Rohith's Blog</title>
+		<style>
+			body {
+				background-color: white;
+			}
+
+			div.blog {
+				border-style: solid;
+				margin : 20px;
+			}
+
+			div.blog-title {
+				margin : 20px;
+				margin-left: 100px;
+				margin-right: 100px;
+				padding : 20px;
+				border-style: outset;
+			}
+
+			div.blog-body {
+				margin : 20px;
+				margin-left: 100px;
+				margin-right: 100px;
+				padding : 20px;
+				border-style: outset;
+			}
+
+			button {
+
+			}
+
+		</style>
+	</head>
+	<body>
+		<h1>Welcome to Rohith's Blog</h1>
+		<button formmethod = "get" onclick="location.href = '/blog/newpost';" >Click to create new blog</button>
+		{% for blog in blogs %}
+			<div class = "blog">
+				<div class = "blog-title">{{blog.subject}}</div>
+				<div class = "blog-body">{{blog.content}}</div>
+			</div>
+		{% endfor %}
+		<button >
+		Click to drop table</button>
+		<div class = "cookie">You have visited {{n}} times</div> 
+
+
+	</body>
+</html>
