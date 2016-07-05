@@ -1,0 +1,159 @@
+<!--
+* The program is an application to track the gps coordinates sent by our device and plot it on google maps.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html,
+      body {
+        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      	background-color: #2f4f4f;
+      }
+
+  	  #res {
+  	  	text-align: center;
+  	  	border-style: ridge;
+  	  	color: white;
+  	  	padding: 10px;
+  	  	position: absolute;
+  	  	top: 300px;
+  	  	left: 50px;
+  	  	color: white;
+  	  	size: 50px;
+  	  	height: 400px;
+  	  	width: 160px;
+  	  }
+
+      #map {
+      	left:22%;
+      	height: 100%;
+      }
+      
+      #column {
+      		background-color: #a9a9a9;
+	      	height: 0%;
+      		width: 20%;
+      }
+
+      #but {
+      	border-style: ridge;
+      	text-align: center;
+      	background-color: transparent;
+      	color: white;
+      	width: 150px;
+      	height: 40px;
+      	font-family: fantasy;
+      	margin-left: 60px;
+      	font-size: 20px;
+}
+
+	h2 {
+		text-align: center;
+		border-style: ridge;
+		color: white;
+		padding: 10px;
+		margin-left: 15px;	
+		font-family: fantasy;
+	}
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  </head>
+  <body id="body">
+  	<div id="column">
+  		<h2>Click button to track movement of the person</h2>
+  		<button onclick="buttonClick()" id="but">Click</button>
+  	</div>
+  	<div id="res"></div>
+    <div id="map"></div>
+    <script>
+
+
+
+      function buttonClick(){
+      		$.get("http://services.rightventures.net/SmartDeviceWebServices/index.php/gps_controller/get_nmea", function(data){
+
+//http://services.rightventures.net/SmartDeviceWebServices/index.php/gps_controller/get_nmea
+
+      		clean_data(data);
+      			//document.getElementById("res").innerHTML=data.results[0].address_components[2].long_name;
+      		//	alert(data);
+      		});
+
+      }
+
+      function clean_data(data){
+      		var parsedData = JSON.parse(data);
+      		var listOfNmea = [];
+      		var listOfTimestamps = [];
+      		var destinations = [];
+      		var coordinates = [];
+      		var i = 0;
+      		for(var key in parsedData){
+      			listOfNmea.push(parsedData[key].nmea);
+      			listOfTimestamps.push(parsedData[key].timestamps);
+      			coordinates[i] = getLatLng(parsedData[key].nmea);
+      			destinations[i] = new google.maps.LatLng(coordinates.lat,coordinates.lng);
+      			i++;
+      		}   		
+      		updateMap(coordinates);
+      }
+
+      function updateMap(coordinates){
+   	 
+   	  	var destinations = [];
+   	 	var i;
+   	 	for(i=0; i<coordinates.length; i++){
+   	 		//destinations.push(new google.maps.LatLng(coordinates.lat,coordinates.lng));
+   	 		//console.log(coordinates[i].lat + " : " + coordinates[i].lng);
+   	 		destinations.push(new google.maps.LatLng(coordinates[i].lat, coordinates[i].lng));
+   	 	}
+      	 var mapDiv = document.getElementById("map");
+		 var mapOptions = { center: new google.maps.LatLng(12.913200, 77.550172), zoom: 15, mapTypeId: google.maps.MapTypeId.ROADMAP, zoomControl : true, mapTypeControl: true, mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR, position: google.maps.ControlPosition.TOP_CENTER }, zoomControl: true, zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER }, scaleControl: true}; 
+     	 var map = new google.maps.Map(mapDiv, mapOptions);      	
+     	 var marker = new google.maps.Marker({ position: new google.maps.LatLng(12.913200, 77.550172), map: map });
+	 	 var polylineOptions = { path: destinations, strokeColor: "##ff0000", strokeWeight: 10 };
+     	 var polyline = new google.maps.Polyline(polylineOptions);
+     	 polyline.setMap(map);
+
+      }
+
+      function getLatLng(nmea){
+      	var nmeaSplit = nmea.split(",");
+      	var coordinates = new Object();
+      	coordinates.lat = nmeaSplit[3];
+      	coordinates.lng = nmeaSplit[4];
+      	return coordinates;
+      }
+
+      
+      function init(){
+      	var mapDiv = document.getElementById("map");
+	    var mapOptions = { center: new google.maps.LatLng(12.913200, 77.550172), zoom: 30, mapTypeId: google.maps.MapTypeId.ROADMAP, zoomControl : true, mapTypeControl: true, mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR, position: google.maps.ControlPosition.TOP_CENTER }, zoomControl: true, zoomControlOptions: { position: google.maps.ControlPosition.LEFT_CENTER }, scaleControl: true}; 
+
+     	var map = new google.maps.Map(mapDiv, mapOptions);      	
+      	var marker = new google.maps.Marker({ position: new google.maps.LatLng(12.913200, 77.550172), map: map });    
+      	var destinations = [];
+      	destinations.push(new google.maps.LatLng(12.913198,77.550180));
+      	destinations.push(new google.maps.LatLng(12.913198,77.550178));
+      	destinations.push(new google.maps.LatLng(12.913202,77.550173));
+      	var polylineOptions = { path: destinations, strokeColor: "##ff0000", strokeWeight: 10 };
+        var polyline = new google.maps.Polyline(polylineOptions);
+     	polyline.setMap(map);
+     }
+
+     window.onload=init;
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js">
+    </script>
+
+  </body>
+</html>
